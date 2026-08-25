@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bozner Haus – Jahresabrechnung</title>
+<style>
+:root{
+  --paper:#E8ECEE;
+  --surface:#FDFDFC;
+  --surface-2:#F3F6F7;
+  --ink:#14202B;
+  --muted:#5C7080;
+  --rule:#C6D0D6;
+  --rule-soft:#DDE4E8;
+  --accent:#1B4B73;
+  --accent-soft:#E3ECF3;
+  --brass:#8A6A11;
+  --warn:#B23A2E;
+  --warn-soft:#F7E7E4;
+  --ok:#3E7C59;
+  --p1:#1B4B73; --p2:#3E7C59; --p3:#9A7B1F; --p4:#8C4A5F; --p5:#5B6BA8; --p6:#A05A2C;
+  --p7:#4A7C7C; --p8:#7A5B8C;
+  --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.5;
+  -webkit-text-size-adjust:100%;
+  padding-bottom:4rem;
+}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;margin:0}
+h1{font-size:1.5rem}
+h2{font-size:1.25rem;margin-bottom:.15rem}
+h3{font-size:1.02rem}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.94em}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1rem}
+
+/* ---- Kopf ---- */
+header{background:var(--surface);border-bottom:1px solid var(--rule)}
+.head-in{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:flex-end;padding:1.1rem 1rem .9rem}
+.head-t{flex:1 1 16rem;min-width:0}
+.eyebrow{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.head-y{display:flex;gap:.4rem;align-items:center}
+
+/* ---- Reiter ---- */
+nav{background:var(--surface);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:20}
+.tabs{display:flex;gap:.15rem;overflow-x:auto;padding:0 1rem;-webkit-overflow-scrolling:touch;max-width:1080px;margin:0 auto}
+.tab{
+  appearance:none;background:none;border:0;border-bottom:2px solid transparent;
+  font:inherit;font-size:.9rem;color:var(--muted);padding:.7rem .7rem;cursor:pointer;
+  white-space:nowrap;font-weight:500;
+}
+.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+main{padding-top:1.25rem}
+section[hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:1rem 1.1rem;margin-bottom:1rem}
+.card>h2+.sub{margin-top:0}
+.sub{color:var(--muted);font-size:.86rem;margin:.1rem 0 .9rem}
+
+/* ---- Formulare ---- */
+label{display:block;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:.2rem}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=email],input[type=date],input[type=number],select,textarea{
+  width:100%;background:var(--surface);border:1px solid var(--rule);border-radius:2px;
+  padding:.5rem .55rem;min-height:2.6rem;
+}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+input.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+textarea{min-height:6rem;line-height:1.45;resize:vertical}
+.grid{display:grid;gap:.6rem .7rem}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:640px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+button{cursor:pointer}
+.btn{
+  background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:2px;
+  padding:.55rem .95rem;font-size:.9rem;font-weight:600;min-height:2.6rem;
+}
+.btn.ghost{background:var(--surface);color:var(--accent)}
+.btn.quiet{background:var(--surface);color:var(--muted);border-color:var(--rule);font-weight:500}
+.btn.danger{background:var(--surface);color:var(--warn);border-color:var(--warn)}
+.btn:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row-btns{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.9rem}
+
+/* ---- Tabellen ---- */
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1.1rem}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:100%}
+.tblwrap table{padding:0 1.1rem}
+th,td{padding:.42rem .5rem;text-align:left;border-bottom:1px solid var(--rule-soft);vertical-align:baseline}
+th{font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule);white-space:nowrap}
+td.r,th.r{text-align:right}
+td.r{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.total td{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:700;padding-top:.55rem;padding-bottom:.55rem}
+tbody tr:hover{background:var(--surface-2)}
+
+/* ---- Aufenthalts-Karten ---- */
+.check{display:flex;align-items:center;gap:.5rem;min-height:2.6rem;text-transform:none;letter-spacing:0;
+  font-size:.92rem;font-weight:500;color:var(--ink);margin:0;cursor:pointer}
+.ratebox{border:1px solid var(--rule);border-radius:3px;padding:.55rem .6rem;background:var(--surface)}
+.ratename{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;font-weight:600;
+  font-size:.92rem;padding-bottom:.4rem;margin-bottom:.5rem;border-bottom:1px solid var(--rule-soft)}
+.ratename .num{color:var(--brass);font-weight:700}
+.rate + .rate{margin-top:.55rem;padding-top:.55rem;border-top:1px dashed var(--rule-soft)}
+.check.small{font-size:.78rem;color:var(--muted);min-height:1.9rem;margin-top:.25rem}
+.check.small input{width:1rem;height:1rem}
+.check input{width:1.25rem;height:1.25rem;min-height:0;accent-color:var(--accent);margin:0;flex:0 0 auto}
+.chart{margin:.6rem 0 0;padding:0}
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart figcaption{font-size:.78rem;color:var(--muted);margin-top:.35rem;font-family:var(--mono)}
+label.plain{text-transform:none;letter-spacing:0;font-size:.82rem;font-weight:500;color:var(--ink)}
+.owner{font-size:.7rem;font-weight:600;color:var(--brass);letter-spacing:.06em;text-transform:uppercase}
+.stay{border:1px solid var(--rule);border-left:4px solid var(--rule);border-radius:3px;padding:.8rem .9rem;margin-bottom:.7rem;background:var(--surface)}
+.stay-head{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-bottom:.6rem}
+.stay-head .who{flex:1 1 10rem;min-width:0}
+.pill{display:inline-block;font-size:.72rem;font-weight:600;padding:.15rem .5rem;border-radius:999px;background:var(--surface-2);color:var(--muted);border:1px solid var(--rule-soft)}
+.pill.calc{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ---- Zählerband (Signatur) ---- */
+.band{margin:.9rem 0 .4rem}
+.band-lbl{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-bottom:.25rem}
+.band-bar{display:flex;height:30px;border:1px solid var(--rule);border-radius:2px;overflow:hidden;background:
+  repeating-linear-gradient(45deg,#DFE5E9 0 5px,#EDF1F3 5px 10px)}
+.band-seg{position:relative}
+.band-seg[data-p]{opacity:.9}
+.band-axis{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-top:.2rem;font-family:var(--mono)}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem .9rem;margin-top:.5rem;font-size:.78rem;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:.35rem}
+.swatch{width:.75rem;height:.75rem;border-radius:2px;display:inline-block;border:1px solid rgba(0,0,0,.12)}
+.swatch.gap{background:repeating-linear-gradient(45deg,#DFE5E9 0 3px,#EDF1F3 3px 6px)}
+
+/* ---- Meldungen ---- */
+.msg{border-left:3px solid;padding:.5rem .7rem;margin-bottom:.5rem;font-size:.88rem;border-radius:2px}
+.msg.w{border-color:var(--warn);background:var(--warn-soft)}
+.msg.i{border-color:var(--accent);background:var(--accent-soft)}
+.empty{color:var(--muted);font-size:.9rem;padding:1.2rem 0;text-align:center}
+.kv{display:flex;justify-content:space-between;gap:1rem;padding:.3rem 0;border-bottom:1px solid var(--rule-soft);font-size:.9rem}
+.kv:last-child{border-bottom:0}
+.kv b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600}
+.big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:1.35rem;font-weight:700;color:var(--brass)}
+details{border:1px solid var(--rule);border-radius:2px;padding:.5rem .7rem;margin-bottom:.6rem;background:var(--surface)}
+summary{cursor:pointer;font-weight:600;font-size:.92rem}
+summary::marker{color:var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:1.2rem;background:var(--ink);color:#fff;
+  padding:.6rem 1rem;border-radius:3px;font-size:.88rem;z-index:60;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+@media (prefers-reduced-motion:no-preference){.toast{animation:up .2s ease-out}}
+@keyframes up{from{opacity:0;transform:translate(-50%,8px)}}
+
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  nav,header .head-y,.no-print{display:none!important}
+  body{background:#fff;padding:0}
+  .card{border:0;padding:0;margin-bottom:1.2rem;break-inside:avoid}
+  .tblwrap{overflow:visible;margin:0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-in wrap">
+    <div class="head-t">
+      <div class="eyebrow">Bozner Haus · Oberbozen, Ritten</div>
+      <h1>Jahresabrechnung</h1>
+    </div>
+    <div class="head-y no-print">
+      <div style="min-width:6.5rem"><label for="jahrSel">Abrechnungsjahr</label>
+        <select id="jahrSel"></select></div>
+      <button class="btn ghost" id="btnNeuesJahr" style="align-self:flex-end">+ Jahr</button>
+    </div>
+  </div>
+</header>
+
+<nav class="no-print">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-v="aufenthalte">Aufenthalte</button>
+    <button class="tab" role="tab" data-v="zaehler">Jahreszähler</button>
+    <button class="tab" role="tab" data-v="kosten">Kosten</button>
+    <button class="tab" role="tab" data-v="abrechnung">Abrechnung</button>
+    <button class="tab" role="tab" data-v="mail">E-Mails</button>
+    <button class="tab" role="tab" data-v="parteien">Parteien</button>
+    <button class="tab" role="tab" data-v="daten">Daten</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section id="v-aufenthalte" hidden></section>
+  <section id="v-zaehler" hidden></section>
+  <section id="v-kosten" hidden></section>
+  <section id="v-abrechnung" hidden></section>
+  <section id="v-mail" hidden></section>
+  <section id="v-parteien" hidden></section>
+  <section id="v-daten" hidden></section>
+</main>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Datenmodell + Speicher
+   ============================================================ */
+const KEY = "ferienhaus-abrechnung-v1";
+const SCHLUESSEL = {
+  strom:          "nach Stromzähler",
+  wasser:         "nach Wasserzähler",
+  personennaechte:"nach Personennächten",
+  naechte:        "nach Nächten (ohne Personenzahl)",
+  gleich:         "zu gleichen Teilen (nach Anteil)",
+  eigentuemer:    "zu gleichen Teilen unter den Eigentümern",
+  einzeln:        "Einzelbetrag je Eigentümer"
+};
+const STD_KOSTEN = [
+  ["Strom",              "strom"],
+  ["Wasser",             "wasser"],
+  ["Müll",               "personennaechte"],
+  ["Holz",               "personennaechte"],
+  ["Klärgrube",          "personennaechte"],
+  ["Kaminkehrer",        "personennaechte"],
+  ["Sonstiges",          "personennaechte"],
+  ["Garten",             "eigentuemer"],
+  ["Gebäudeversicherung","eigentuemer"],
+  ["Immobiliensteuer",   "einzeln"],
+  ["Aufenthaltsabgabe",  "gleich"]
+];
+const PFARBEN = ["--p1","--p2","--p3","--p4","--p5","--p6","--p7","--p8"];
+const MONATE = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+const STD_BANK = {
+  inhaber:  "Michael Authier",
+  institut: "Raika Ritten",
+  iban:     "IT51 Z 08187 58742 000000716329",
+  bic:      "CCRTIT2TRIT"
+};
+
+let state = null;
+let view  = "aufenthalte";
+
+function uid(){ return Math.random().toString(36).slice(2,10); }
+
+function neuesJahr(jahr, vorlage){
+  return {
+    zaehler:{ stromAnfang:"", stromEnde:"", wasserAnfang:"", wasserEnde:"" },
+    leerstand:{ strom:"nutzer", wasser:"nutzer" },
+    monat:{ strom: Array(12).fill("") },
+    aufenthalte:[],
+    kosten: STD_KOSTEN.map(([name,schl])=>({id:uid(), name, betrag:"", schluessel:schl,
+      einzel:{}, bezahlt:{}, einzel2:{}, bezahlt2:{},
+      termin1:"Akonto (Juni)", termin2:"Saldo (Dezember)"})),
+    mail:{
+      betreff:"Abrechnung Bozner Haus "+jahr,
+      einleitung:"hier ist die Abrechnung für unser Bozner Haus in Oberbozen für das Jahr "+jahr+".",
+      schluss:"Bitte überweise den Betrag innerhalb von vier Wochen.\n\nViele Grüße\nMike"
+    },
+    ...(vorlage||{})
+  };
+}
+
+function leer(){
+  const j = String(new Date().getFullYear()-1);
+  const s = {
+    parteien: Array.from({length:6},(_,i)=>({id:uid(), name:"Partei "+(i+1), email:"", anteil:"1", eigentuemer:true})),
+    jahre:{}, aktiv:j, bank: Object.assign({}, STD_BANK)
+  };
+  s.jahre[j] = neuesJahr(j);
+  return s;
+}
+
+function laden(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return leer();
+    const s = JSON.parse(raw);
+    if(!s || !s.parteien || !s.jahre) return leer();
+    // Nachrüsten älterer Sicherungen
+    s.bank = Object.assign({}, STD_BANK, s.bank || {});
+    s.parteien.forEach(p=>{ if(p.eigentuemer === undefined) p.eigentuemer = true; });
+    Object.keys(s.jahre).forEach(j=>{
+      const J = s.jahre[j];
+      (J.kosten||[]).forEach(k=>{
+        if(!k.einzel) k.einzel = {}; if(!k.bezahlt) k.bezahlt = {};
+        if(!k.einzel2) k.einzel2 = {}; if(!k.bezahlt2) k.bezahlt2 = {};
+        if(!k.termin1) k.termin1 = "Akonto (Juni)";
+        if(!k.termin2) k.termin2 = "Saldo (Dezember)";
+      });
+      if(!J.monat || !Array.isArray(J.monat.strom)) J.monat = { strom: Array(12).fill("") };
+      while(J.monat.strom.length < 12) J.monat.strom.push("");
+      if(J.mail){
+        ["betreff","einleitung","schluss"].forEach(f=>{
+          if(typeof J.mail[f] === "string") J.mail[f] = J.mail[f].replace(/Ferienhaus/g, "Bozner Haus");
+        });
+      }
+      J.leerstand = J.leerstand || {};
+      ["strom","wasser"].forEach(a=>{ if(!J.leerstand[a] || J.leerstand[a]==="gleich") J.leerstand[a] = "nutzer"; });
+    });
+    return s;
+  }catch(e){ return leer(); }
+}
+function speichern(){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); }
+  catch(e){ toast("Speichern fehlgeschlagen – Speicher voll oder gesperrt."); }
+}
+function jahr(){ return state.jahre[state.aktiv]; }
+
+/* ============================================================
+   Zahlen & Datum (deutsches Format)
+   ============================================================ */
+function num(v){
+  if(typeof v === "number") return isFinite(v)?v:0;
+  if(v == null) return 0;
+  // Komma als Dezimaltrenner, Punkte als Tausendertrenner
+  const t = String(v).trim().replace(/\s/g,"");
+  const hatKomma = t.indexOf(",")>=0;
+  const bereinigt = hatKomma ? t.replace(/\./g,"").replace(",",".") : t;
+  const n = parseFloat(bereinigt);
+  return isFinite(n) ? n : 0;
+}
+function hatWert(v){ return v!=null && String(v).trim()!==""; }
+function fmt(n, dec){
+  dec = dec==null?2:dec;
+  if(!isFinite(n)) n = 0;
+  return n.toLocaleString("de-DE",{minimumFractionDigits:dec, maximumFractionDigits:dec});
+}
+function eur(n){ return fmt(n,2)+" €"; }
+function dDE(iso){
+  if(!iso) return "–";
+  const p = iso.split("-");
+  return p.length===3 ? p[2]+"."+p[1]+"."+p[0] : iso;
+}
+function tage(a,b){
+  if(!a||!b) return 0;
+  const d = (Date.parse(b+"T00:00:00") - Date.parse(a+"T00:00:00"))/86400000;
+  return isFinite(d) ? Math.round(d) : 0;
+}
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function toast(t){
+  const el = document.createElement("div");
+  el.className = "toast"; el.textContent = t;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 2600);
+}
+
+/* ============================================================
+   Berechnung
+   ============================================================ */
+function verteile(betrag, gew){
+  const s = gew.reduce((a,b)=>a+b,0);
+  if(!(s>0)) return null;
+  const cents = Math.round(betrag*100);
+  const roh = gew.map(g => cents*g/s);
+  const basis = roh.map(x => Math.floor(x));
+  let rest = cents - basis.reduce((a,b)=>a+b,0);
+  const ord = roh.map((x,i)=>({i, f:x-Math.floor(x)})).sort((a,b)=>b.f-a.f);
+  for(let k=0; k<rest && ord.length; k++) basis[ord[k % ord.length].i]++;
+  return basis.map(c => c/100);
+}
+
+function berechne(){
+  const J = jahr();
+  const P = state.parteien;
+  const idx = {}; P.forEach((p,i)=>idx[p.id]=i);
+
+  const r = {
+    p: P.map((p,i)=>({
+      id:p.id, name:p.name||("Partei "+(i+1)), email:(p.email||"").trim(),
+      anteil: hatWert(p.anteil)?num(p.anteil):1,
+      eigentuemer: p.eigentuemer !== false,
+      farbe:"var("+PFARBEN[i%PFARBEN.length]+")",
+      naechte:0, pn:0, strom:0, wasser:0, stromEff:0, wasserEff:0,
+      posten:{}, bezahltPost:{}, ratenPost:{}, summe:0, bezahlt:0, offen:0, stays:[]
+    })),
+    warn:[], hinw:[], posten:[], stays:[], monat:[], monatSumme:0, gesamtBezahlt:0,
+    stromJahr:0, stromZug:0, stromLeer:0, stromPreis:0,
+    wasserJahr:0, wasserZug:0, wasserLeer:0, wasserPreis:0,
+    gesamt:0
+  };
+
+  /* --- Aufenthalte --- */
+  const sortiert = J.aufenthalte.slice().sort((a,b)=>String(a.anreise).localeCompare(String(b.anreise)));
+  sortiert.forEach(a=>{
+    const i = idx[a.parteiId];
+    const n = tage(a.anreise, a.abreise);
+    const pers = Math.max(0, Math.round(num(a.personen)));
+    const st = (hatWert(a.stromAb)&&hatWert(a.stromAn)) ? num(a.stromAb)-num(a.stromAn) : 0;
+    const wa = (hatWert(a.wasserAb)&&hatWert(a.wasserAn)) ? num(a.wasserAb)-num(a.wasserAn) : 0;
+    const s = {id:a.id, parteiId:a.parteiId, pIdx:i, anreise:a.anreise, abreise:a.abreise,
+               naechte:n, personen:pers, pn:n*pers, strom:st, wasser:wa,
+               stromAn:num(a.stromAn), stromAb:num(a.stromAb)};
+    r.stays.push(s);
+
+    if(i == null){ r.warn.push("Ein Aufenthalt vom "+dDE(a.anreise)+" ist keiner Partei zugeordnet."); return; }
+    if(!a.anreise || !a.abreise) r.warn.push(r.p[i].name+": Aufenthalt ohne vollständige Daten.");
+    else if(n <= 0) r.warn.push(r.p[i].name+" ("+dDE(a.anreise)+"): Abreise liegt nicht nach der Anreise.");
+    if(pers <= 0) r.warn.push(r.p[i].name+" ("+dDE(a.anreise)+"): Personenzahl fehlt.");
+    if(st < 0) r.warn.push(r.p[i].name+" ("+dDE(a.anreise)+"): Stromzähler bei Abreise kleiner als bei Anreise.");
+    if(wa < 0) r.warn.push(r.p[i].name+" ("+dDE(a.anreise)+"): Wasserzähler bei Abreise kleiner als bei Anreise.");
+
+    const P_ = r.p[i];
+    P_.naechte += Math.max(0,n); P_.pn += Math.max(0,n*pers);
+    P_.strom += Math.max(0,st);  P_.wasser += Math.max(0,wa);
+    P_.stays.push(s);
+  });
+
+  /* Chronologie der Zählerstände prüfen */
+  for(let k=1;k<r.stays.length;k++){
+    const v = r.stays[k-1], a = r.stays[k];
+    if(hatWert(v.stromAb) && a.stromAn && v.stromAb && a.stromAn < v.stromAb)
+      r.warn.push("Stromzähler: Anreisestand am "+dDE(a.anreise)+" ist niedriger als der Abreisestand am "+dDE(v.abreise)+".");
+  }
+  /* Überschneidungen */
+  for(let k=1;k<r.stays.length;k++){
+    if(r.stays[k].anreise && r.stays[k-1].abreise && r.stays[k].anreise < r.stays[k-1].abreise)
+      r.hinw.push("Die Aufenthalte ab "+dDE(r.stays[k-1].anreise)+" und ab "+dDE(r.stays[k].anreise)+" überschneiden sich.");
+  }
+
+  /* --- Zähler: Jahresverbrauch und Leerstand --- */
+  function meter(art){
+    const zA = J.zaehler[art+"Anfang"], zE = J.zaehler[art+"Ende"];
+    const zug = r.p.reduce((s,p)=>s+p[art],0);
+    let jahres = zug;
+    if(hatWert(zA) && hatWert(zE)) jahres = num(zE) - num(zA);
+    const modus = J.leerstand[art] || "gleich";
+    let leer = jahres - zug;
+    const bez = art==="strom" ? "Strom" : "Wasser";
+    if(hatWert(zA) && hatWert(zE)){
+      if(jahres < 0) r.warn.push(bez+": Jahresendstand ist kleiner als der Jahresanfangsstand.");
+      else if(leer < -0.001) r.warn.push(bez+": Die Aufenthalte verbrauchen mehr, als der Jahreszähler hergibt ("+fmt(-leer,1)+" zu viel). Bitte Stände prüfen.");
+    }
+    if(leer < 0) leer = 0;
+    let gew;
+    if(modus === "personennaechte") gew = r.p.map(p=>p.pn);
+    else if(modus === "proportional") gew = null;
+    else if(modus === "alle") gew = r.p.map(p=>p.anteil);
+    else gew = r.p.map(p=>p.naechte > 0 ? 1 : 0);   // "nutzer": nur Parteien mit Aufenthalt
+    if(gew && !(gew.reduce((a,b)=>a+b,0) > 0)) gew = null;
+    r.p.forEach((p,i)=>{
+      const anteilLeer = gew ? leer*gew[i]/gew.reduce((a,b)=>a+b,0) : 0;
+      p[art+"Eff"] = p[art] + anteilLeer;
+      p[art+"Leer"] = anteilLeer;
+    });
+    r[art+"Jahr"] = jahres;
+    r[art+"Zug"]  = zug;
+    r[art+"Leer"] = leer;
+    r[art+"Basis"]= r.p.reduce((s,p)=>s+p[art+"Eff"],0);
+  }
+  meter("strom"); meter("wasser");
+
+  /* --- Gewichte --- */
+  const gew = {
+    gleich:          r.p.map(p=>p.anteil),
+    eigentuemer:     r.p.map(p=>p.eigentuemer ? p.anteil : 0),
+    naechte:         r.p.map(p=>p.naechte),
+    personennaechte: r.p.map(p=>p.pn),
+    strom:           r.p.map(p=>p.stromEff),
+    wasser:          r.p.map(p=>p.wasserEff)
+  };
+
+  /* --- Kosten verteilen --- */
+  J.kosten.forEach(k=>{
+    if(k.schluessel === "einzeln"){
+      const einzel = k.einzel || {};
+      const einzel2 = k.einzel2 || {}, bez = k.bezahlt || {}, bez2 = k.bezahlt2 || {};
+      const raten = [
+        {name: k.termin1 || "1. Zahlung", quelle: einzel,  gezahlt: bez},
+        {name: k.termin2 || "2. Zahlung", quelle: einzel2, gezahlt: bez2}
+      ].map(rt=>({
+        name: rt.name,
+        betraege: r.p.map(p => p.eigentuemer ? Math.round(num(rt.quelle[p.id])*100)/100 : 0),
+        bezahlt:  r.p.map(p => !!(p.eigentuemer && rt.gezahlt[p.id]))
+      }));
+      const anteile = r.p.map((p,i)=> raten.reduce((a,rt)=>a+rt.betraege[i], 0));
+      const betrag = anteile.reduce((a,b)=>a+b,0);
+      let schonBezahlt = 0;
+      r.p.forEach((p,i)=>{
+        p.posten[k.id] = anteile[i]; p.summe += anteile[i];
+        const bz = raten.reduce((a,rt)=> a + (rt.bezahlt[i] ? rt.betraege[i] : 0), 0);
+        if(bz !== 0){ p.bezahltPost[k.id] = bz; p.bezahlt += bz; schonBezahlt += bz; }
+        p.ratenPost = p.ratenPost || {};
+        if(anteile[i] !== 0)
+          p.ratenPost[k.id] = raten.map((rt,ri)=>({name:rt.name, betrag:rt.betraege[i], bezahlt:rt.bezahlt[i]}));
+      });
+      r.gesamt += betrag; r.gesamtBezahlt += schonBezahlt;
+      r.posten.push({id:k.id, name:k.name, betrag, schluessel:"einzeln", anteile, bezahlt:schonBezahlt, raten});
+      const eig = r.p.filter(p=>p.eigentuemer);
+      if(!eig.length) r.warn.push("„"+k.name+"“ wird je Eigentümer abgerechnet, aber keine Partei ist als Eigentümer markiert.");
+      const fehlt = eig.filter(p=>!hatWert(einzel[p.id]) && !hatWert(einzel2[p.id]));
+      if(fehlt.length) r.hinw.push("„"+k.name+"“: Für "+fehlt.map(p=>p.name).join(", ")+" fehlt noch ein Betrag.");
+      const halb = eig.filter(p=>(hatWert(einzel[p.id]) ? 1:0) + (hatWert(einzel2[p.id]) ? 1:0) === 1);
+      if(halb.length) r.hinw.push("„"+k.name+"“: Bei "+halb.map(p=>p.name).join(", ")+" ist erst eine der beiden Zahlungen eingetragen.");
+      return;
+    }
+    const betrag = num(k.betrag);
+    const post = {id:k.id, name:k.name, betrag, schluessel:k.schluessel, anteile:null};
+    if(hatWert(k.betrag) && betrag !== 0){
+      let g = gew[k.schluessel] || gew.gleich;
+      let a = verteile(betrag, g);
+      if(!a){
+        a = verteile(betrag, gew.gleich);
+        const grund = k.schluessel === "eigentuemer"
+          ? "„"+k.name+"“: Keine Partei ist als Eigentümer markiert – ersatzweise auf alle zu gleichen Teilen verteilt."
+          : "„"+k.name+"“: Für den Schlüssel „"+(SCHLUESSEL[k.schluessel]||k.schluessel)+"“ gibt es keine Werte – ersatzweise zu gleichen Teilen verteilt.";
+        r.hinw.push(grund);
+      }
+      post.anteile = a || r.p.map(()=>0);
+      r.p.forEach((p,i)=>{ p.posten[k.id] = post.anteile[i]; p.summe += post.anteile[i]; });
+      r.gesamt += betrag;
+    }else{
+      post.anteile = r.p.map(()=>0);
+      r.p.forEach(p=>{ p.posten[k.id] = 0; });
+      if(!hatWert(k.betrag)) r.hinw.push("Für „"+k.name+"“ ist noch kein Betrag eingetragen.");
+    }
+    r.posten.push(post);
+  });
+
+  r.stromPreis  = r.stromBasis  > 0 ? (r.posten.filter(p=>p.schluessel==="strom").reduce((s,p)=>s+p.betrag,0) / r.stromBasis) : 0;
+  r.wasserPreis = r.wasserBasis > 0 ? (r.posten.filter(p=>p.schluessel==="wasser").reduce((s,p)=>s+p.betrag,0) / r.wasserBasis) : 0;
+
+  r.p.forEach(p=>{ p.offen = Math.round((p.summe - p.bezahlt)*100)/100; });
+  r.gesamtOffen = Math.round((r.gesamt - r.gesamtBezahlt)*100)/100;
+
+  // Monatsverbrauch Strom
+  const mv = (J.monat && J.monat.strom) || [];
+  r.monat = MONATE.map((m,i)=>({ name:m, wert: hatWert(mv[i]) ? num(mv[i]) : null }));
+  r.monatErfasst = r.monat.some(m=>m.wert != null);
+  r.monatSumme = r.monat.reduce((a,m)=>a+(m.wert||0),0);
+  r.monatVoll = r.monat.every(m=>m.wert != null);
+  if(r.monatErfasst && r.monatVoll && r.stromJahr > 0 && Math.abs(r.monatSumme - r.stromJahr) > 1)
+    r.hinw.push("Monatswerte ergeben "+fmt(r.monatSumme,0)+" kWh, der Jahreszähler "+fmt(r.stromJahr,0)+" kWh – Differenz "+fmt(Math.abs(r.monatSumme-r.stromJahr),0)+" kWh. Abgerechnet wird nach dem Zähler.");
+  if(r.monatErfasst && !r.monatVoll)
+    r.hinw.push("Der Monatsverbrauch ist erst für "+r.monat.filter(m=>m.wert!=null).length+" von 12 Monaten eingetragen.");
+
+  // Nächte je Monat, für den Belegungsstreifen unter dem Diagramm
+  r.belegung = MONATE.map(()=>({gesamt:0, teile:{}}));
+  r.stays.forEach(st=>{
+    if(!st.anreise || st.naechte <= 0 || st.pIdx == null) return;
+    let t = Date.parse(st.anreise+"T12:00:00");
+    for(let n=0; n<st.naechte && n<400; n++){
+      const dt = new Date(t + n*86400000);
+      if(String(dt.getFullYear()) !== String(state.aktiv)) continue;
+      const b = r.belegung[dt.getMonth()];
+      b.gesamt++; b.teile[st.parteiId] = (b.teile[st.parteiId]||0)+1;
+    }
+  });
+
+  r.p.forEach(p=>{ if(!p.email) r.hinw.push(p.name+" hat noch keine E-Mail-Adresse."); });
+
+  const kontroll = r.p.reduce((s,p)=>s+p.summe,0);
+  if(Math.abs(kontroll - r.gesamt) > 0.005)
+    r.warn.push("Kontrollsumme weicht ab: verteilt "+eur(kontroll)+" von "+eur(r.gesamt)+".");
+  r.verteilt = kontroll;
+  return r;
+}
+
+/* ============================================================
+   Ansichten
+   ============================================================ */
+function render(){
+  document.querySelectorAll(".tab").forEach(t=>{
+    const on = t.dataset.v === view;
+    t.setAttribute("aria-selected", on ? "true" : "false");
+  });
+  document.querySelectorAll("main section").forEach(s=>{ s.hidden = true; });
+  const el = document.getElementById("v-"+view);
+  el.hidden = false;
+  ({parteien:vParteien, aufenthalte:vAufenthalte, zaehler:vZaehler, kosten:vKosten,
+    abrechnung:vAbrechnung, mail:vMail, daten:vDaten})[view](el);
+  renderJahre();
+}
+
+function renderJahre(){
+  const sel = document.getElementById("jahrSel");
+  const js = Object.keys(state.jahre).sort();
+  sel.innerHTML = js.map(j=>`<option value="${j}"${j===state.aktiv?" selected":""}>${j}</option>`).join("");
+}
+
+/* ---------- Parteien ---------- */
+function vParteien(el){
+  el.innerHTML = `
+  <div class="card">
+    <h2>Parteien</h2>
+    <p class="sub">Name, E-Mail und Eigentümerstatus gelten für alle Abrechnungsjahre. Der Anteil steuert Posten,
+       die zu gleichen Teilen laufen – bei überall gleichem Anteil wird schlicht durch die Anzahl geteilt.
+       Garten, Gebäudeversicherung und Immobiliensteuer treffen nur die Eigentümer.</p>
+    <div id="pListe"></div>
+    <div class="row-btns">
+      <button class="btn ghost" id="pAdd">+ Partei hinzufügen</button>
+    </div>
+  </div>`;
+  const L = el.querySelector("#pListe");
+  L.innerHTML = state.parteien.map((p,i)=>`
+    <div class="stay" style="border-left-color:var(${PFARBEN[i%PFARBEN.length]})">
+      <div class="grid g4">
+        <div><label>Name</label><input type="text" data-p="${p.id}" data-f="name" value="${esc(p.name)}" autocomplete="off"></div>
+        <div><label>E-Mail</label><input type="email" data-p="${p.id}" data-f="email" value="${esc(p.email)}" inputmode="email" autocomplete="off" placeholder="name@beispiel.de"></div>
+        <div><label>Anteil</label><input type="text" class="n" data-p="${p.id}" data-f="anteil" value="${esc(p.anteil)}" inputmode="decimal"></div>
+        <div><label>Eigentum</label>
+          <label class="check"><input type="checkbox" data-p="${p.id}" data-f="eigentuemer"${p.eigentuemer!==false?" checked":""}> Eigentümer</label></div>
+      </div>
+      <div class="row-btns"><button class="btn quiet" data-del="${p.id}">Partei entfernen</button></div>
+    </div>`).join("");
+
+  L.addEventListener("input", e=>{
+    const t = e.target; if(!t.dataset.p) return;
+    const p = state.parteien.find(x=>x.id===t.dataset.p);
+    if(p){ p[t.dataset.f] = (t.type === "checkbox") ? t.checked : t.value; speichern(); }
+  });
+  L.addEventListener("click", e=>{
+    const id = e.target.dataset && e.target.dataset.del; if(!id) return;
+    const p = state.parteien.find(x=>x.id===id);
+    const zahl = Object.values(state.jahre).reduce((s,j)=>s+j.aufenthalte.filter(a=>a.parteiId===id).length,0);
+    const frage = zahl ? `„${p.name}“ hat ${zahl} eingetragene Aufenthalte. Partei und Aufenthalte löschen?`
+                       : `„${p.name}“ entfernen?`;
+    if(!confirm(frage)) return;
+    state.parteien = state.parteien.filter(x=>x.id!==id);
+    Object.values(state.jahre).forEach(j=>{ j.aufenthalte = j.aufenthalte.filter(a=>a.parteiId!==id); });
+    speichern(); render();
+  });
+  el.querySelector("#pAdd").onclick = ()=>{
+    state.parteien.push({id:uid(), name:"Partei "+(state.parteien.length+1), email:"", anteil:"1", eigentuemer:false});
+    toast("Partei angelegt – Eigentümerstatus bei Bedarf setzen.");
+    speichern(); render();
+  };
+}
+
+/* ---------- Aufenthalte ---------- */
+function vAufenthalte(el){
+  const J = jahr();
+  el.innerHTML = `
+  <div class="card">
+    <h2>Aufenthalte ${state.aktiv}</h2>
+    <p class="sub">Für jeden Aufenthalt An- und Abreise, Personenzahl und die Zählerstände bei Ankunft und Abfahrt eintragen.
+       Nächte und Verbrauch werden laufend mitgerechnet.</p>
+    <div id="aListe"></div>
+    <div class="row-btns">
+      <button class="btn" id="aAdd">+ Aufenthalt eintragen</button>
+      <button class="btn quiet" id="aSort">Nach Anreise sortieren</button>
+    </div>
+  </div>
+  <div class="card" id="aSum"></div>`;
+
+  const L = el.querySelector("#aListe");
+  if(!J.aufenthalte.length){
+    L.innerHTML = `<p class="empty">Noch keine Aufenthalte für ${state.aktiv}. Trage den ersten ein.</p>`;
+  }else{
+    L.innerHTML = J.aufenthalte.map(a=>{
+      const i = state.parteien.findIndex(p=>p.id===a.parteiId);
+      const n = tage(a.anreise,a.abreise), pers = Math.round(num(a.personen));
+      const st = (hatWert(a.stromAn)&&hatWert(a.stromAb)) ? num(a.stromAb)-num(a.stromAn) : null;
+      const wa = (hatWert(a.wasserAn)&&hatWert(a.wasserAb)) ? num(a.wasserAb)-num(a.wasserAn) : null;
+      return `
+      <div class="stay" style="border-left-color:var(${PFARBEN[(i<0?0:i)%PFARBEN.length]})">
+        <div class="stay-head">
+          <div class="who"><label>Partei</label>
+            <select data-a="${a.id}" data-f="parteiId">
+              ${state.parteien.map(p=>`<option value="${p.id}"${p.id===a.parteiId?" selected":""}>${esc(p.name)}</option>`).join("")}
+            </select></div>
+          <span class="pill calc">${n>0?n:0} ${n===1?"Nacht":"Nächte"}</span>
+          <span class="pill calc">${n>0&&pers>0?n*pers:0} Personennächte</span>
+          <span class="pill calc">${st==null?"– kWh":fmt(st,1)+" kWh"}</span>
+          <span class="pill calc">${wa==null?"– m³":fmt(wa,2)+" m³"}</span>
+        </div>
+        <div class="grid g3">
+          <div><label>Anreise</label><input type="date" data-a="${a.id}" data-f="anreise" value="${esc(a.anreise)}"></div>
+          <div><label>Abreise</label><input type="date" data-a="${a.id}" data-f="abreise" value="${esc(a.abreise)}"></div>
+          <div><label>Personen</label><input type="text" class="n" inputmode="numeric" data-a="${a.id}" data-f="personen" value="${esc(a.personen)}"></div>
+        </div>
+        <div class="grid g4" style="margin-top:.6rem">
+          <div><label>Strom Anreise (kWh)</label><input type="text" class="n" inputmode="decimal" data-a="${a.id}" data-f="stromAn" value="${esc(a.stromAn)}"></div>
+          <div><label>Strom Abreise (kWh)</label><input type="text" class="n" inputmode="decimal" data-a="${a.id}" data-f="stromAb" value="${esc(a.stromAb)}"></div>
+          <div><label>Wasser Anreise (m³)</label><input type="text" class="n" inputmode="decimal" data-a="${a.id}" data-f="wasserAn" value="${esc(a.wasserAn)}"></div>
+          <div><label>Wasser Abreise (m³)</label><input type="text" class="n" inputmode="decimal" data-a="${a.id}" data-f="wasserAb" value="${esc(a.wasserAb)}"></div>
+        </div>
+        <div style="margin-top:.6rem"><label>Notiz</label><input type="text" data-a="${a.id}" data-f="notiz" value="${esc(a.notiz)}" placeholder="optional"></div>
+        <div class="row-btns"><button class="btn quiet" data-del="${a.id}">Aufenthalt löschen</button></div>
+      </div>`;
+    }).join("");
+  }
+
+  L.addEventListener("input", e=>{
+    const t = e.target; if(!t.dataset.a) return;
+    const a = J.aufenthalte.find(x=>x.id===t.dataset.a);
+    if(a){ a[t.dataset.f] = t.value; speichern(); vAufenthaltSummen(); pillsAktualisieren(t.dataset.a); }
+  });
+  L.addEventListener("change", e=>{
+    const t = e.target;
+    if(t.dataset.a && t.dataset.f==="parteiId"){ vAufenthalte(el); }
+  });
+  L.addEventListener("click", e=>{
+    const id = e.target.dataset && e.target.dataset.del; if(!id) return;
+    if(!confirm("Diesen Aufenthalt löschen?")) return;
+    J.aufenthalte = J.aufenthalte.filter(x=>x.id!==id);
+    speichern(); vAufenthalte(el);
+  });
+  el.querySelector("#aAdd").onclick = ()=>{
+    const letzte = J.aufenthalte[J.aufenthalte.length-1];
+    J.aufenthalte.push({id:uid(), parteiId:state.parteien[0]&&state.parteien[0].id,
+      anreise:"", abreise:"", personen:"", notiz:"",
+      stromAn: letzte?letzte.stromAb:"", stromAb:"", wasserAn: letzte?letzte.wasserAb:"", wasserAb:""});
+    speichern(); vAufenthalte(el);
+    const k = el.querySelectorAll(".stay");
+    const last = k[k.length-1];
+    if(last && last.scrollIntoView) last.scrollIntoView({block:"center"});
+  };
+  el.querySelector("#aSort").onclick = ()=>{
+    J.aufenthalte.sort((a,b)=>String(a.anreise).localeCompare(String(b.anreise)));
+    speichern(); vAufenthalte(el); toast("Nach Anreisedatum sortiert.");
+  };
+
+  function pillsAktualisieren(){ /* Pills werden beim nächsten Rendern aktualisiert */ }
+  vAufenthaltSummen();
+
+  function vAufenthaltSummen(){
+    const r = berechne();
+    const box = el.querySelector("#aSum");
+    box.innerHTML = `
+      <h2>Summen ${state.aktiv}</h2>
+      <p class="sub">Was bisher auf die Parteien entfällt.</p>
+      <div class="tblwrap"><table>
+        <thead><tr><th>Partei</th><th class="r">Nächte</th><th class="r">Personennächte</th><th class="r">Strom kWh</th><th class="r">Wasser m³</th></tr></thead>
+        <tbody>${r.p.map(p=>`<tr><td>${esc(p.name)}</td><td class="r">${p.naechte}</td><td class="r">${p.pn}</td><td class="r">${fmt(p.strom,1)}</td><td class="r">${fmt(p.wasser,2)}</td></tr>`).join("")}
+        <tr class="total"><td>Gesamt</td>
+          <td class="r">${r.p.reduce((s,p)=>s+p.naechte,0)}</td>
+          <td class="r">${r.p.reduce((s,p)=>s+p.pn,0)}</td>
+          <td class="r">${fmt(r.stromZug,1)}</td>
+          <td class="r">${fmt(r.wasserZug,2)}</td></tr>
+        </tbody></table></div>`;
+  }
+}
+
+/* ---------- Jahreszähler ---------- */
+function vZaehler(el){
+  const J = jahr();
+  const r = berechne();
+  el.innerHTML = `
+  <div class="card">
+    <h2>Jahreszählerstände ${state.aktiv}</h2>
+    <p class="sub">Der Stand am Jahresanfang und am Jahresende. Die Differenz zur Summe aller Aufenthalte ist der
+       Leerstandsverbrauch – bei Frostschutzheizung und Standby kommt da einiges zusammen. Lässt du die Felder leer,
+       wird nur der in den Aufenthalten erfasste Verbrauch abgerechnet.</p>
+    <div class="grid g4">
+      <div><label>Strom 01.01. (kWh)</label><input type="text" class="n" inputmode="decimal" data-z="stromAnfang" value="${esc(J.zaehler.stromAnfang)}"></div>
+      <div><label>Strom 31.12. (kWh)</label><input type="text" class="n" inputmode="decimal" data-z="stromEnde" value="${esc(J.zaehler.stromEnde)}"></div>
+      <div><label>Wasser 01.01. (m³)</label><input type="text" class="n" inputmode="decimal" data-z="wasserAnfang" value="${esc(J.zaehler.wasserAnfang)}"></div>
+      <div><label>Wasser 31.12. (m³)</label><input type="text" class="n" inputmode="decimal" data-z="wasserEnde" value="${esc(J.zaehler.wasserEnde)}"></div>
+    </div>
+    <div class="grid g2" style="margin-top:.9rem">
+      <div><label>Leerstandsstrom verteilen</label>
+        <select data-l="strom">${leerOpts(J.leerstand.strom)}</select></div>
+      <div><label>Leerstandswasser verteilen</label>
+        <select data-l="wasser">${leerOpts(J.leerstand.wasser)}</select></div>
+    </div>
+    <p class="sub" style="margin:.6rem 0 0">„Unter den Nutzern“ heißt: nur Parteien mit mindestens einem Aufenthalt in
+       ${state.aktiv} tragen die Grundlast. Ein Eigentümer, der das Haus nicht nutzt, bleibt außen vor.</p>
+  </div>
+
+  <div class="card">
+    <h2>Monatsverbrauch Strom</h2>
+    <p class="sub">Aus der Versorger-App abgelesen. Rein informativ – abgerechnet wird nach den Zählerständen.
+       Die Monatswerte zeigen den Parteien, wann die Grundlast anfällt, und decken Ausreißer auf.</p>
+    <div class="grid g4">
+      ${MONATE.map((m,i)=>`<div><label class="plain">${m} (kWh)</label>
+        <input type="text" class="n" inputmode="decimal" data-m="${i}" value="${esc((J.monat.strom||[])[i]||"")}" placeholder="–"></div>`).join("")}
+    </div>
+    ${r.monatErfasst ? stromDiagramm(r) : `<p class="empty">Noch keine Monatswerte eingetragen.</p>`}
+  </div>
+
+  <div class="card">
+    <h2>Zählerband</h2>
+    <p class="sub">Wie sich der Jahresverbrauch auf die Aufenthalte und den Leerstand verteilt.</p>
+    ${band("strom", r, "kWh", 1)}
+    ${band("wasser", r, "m³", 2)}
+    <div class="legend">
+      ${r.p.filter(p=>p.strom>0||p.wasser>0).map(p=>`<span><i class="swatch" style="background:${p.farbe}"></i>${esc(p.name)}</span>`).join("")}
+      <span><i class="swatch gap"></i>Leerstand</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Verbrauchsbilanz</h2>
+    ${bilanz("Strom", r.stromJahr, r.stromZug, r.stromLeer, "kWh", 1)}
+    <div style="height:.8rem"></div>
+    ${bilanz("Wasser", r.wasserJahr, r.wasserZug, r.wasserLeer, "m³", 2)}
+  </div>`;
+
+  el.oninput = e=>{
+    const t = e.target;
+    if(t.dataset.z){ J.zaehler[t.dataset.z] = t.value; speichern(); }
+    else if(t.dataset.m != null){ J.monat.strom[Number(t.dataset.m)] = t.value; speichern(); }
+  };
+  el.onchange = e=>{
+    const t = e.target;
+    if(t.dataset.l){ J.leerstand[t.dataset.l] = t.value; speichern(); vZaehler(el); }
+    else if(t.dataset.z != null || t.dataset.m != null){ vZaehler(el); }
+  };
+
+  function leerOpts(v){
+    const o = {nutzer:"zu gleichen Teilen unter den Nutzern", personennaechte:"nach Personennächten",
+               proportional:"proportional zum eigenen Verbrauch", alle:"zu gleichen Teilen unter allen Parteien"};
+    return Object.keys(o).map(k=>`<option value="${k}"${k===(v||"nutzer")?" selected":""}>${o[k]}</option>`).join("");
+  }
+}
+function stromDiagramm(r){
+  if(!r.monatErfasst) return "";
+  const W=720, H=250, L=46, R=10, T=18, B=54;   // Ränder
+  const max = Math.max.apply(null, r.monat.map(m=>m.wert||0).concat([1]));
+  const stufe = Math.pow(10, Math.floor(Math.log10(max)));
+  const obere = Math.ceil(max/stufe)*stufe;
+  const pw = (W-L-R)/12, bw = pw*0.62, ph = H-T-B;
+  const y = v => T + ph - (v/obere)*ph;
+  const gitter = [0,.25,.5,.75,1].map(f=>{
+    const v = obere*f;
+    return `<line x1="${L}" y1="${y(v)}" x2="${W-R}" y2="${y(v)}" stroke="var(--rule-soft)" stroke-width="1"/>
+      <text x="${L-6}" y="${y(v)+4}" text-anchor="end" font-size="10" fill="var(--muted)" font-family="var(--mono)">${fmt(v,0)}</text>`;
+  }).join("");
+  const balken = r.monat.map((m,i)=>{
+    const x = L + i*pw + (pw-bw)/2;
+    if(m.wert == null) return `<text x="${x+bw/2}" y="${T+ph-6}" text-anchor="middle" font-size="10" fill="var(--rule)">–</text>`;
+    const hh = Math.max(1,(m.wert/obere)*ph);
+    const belegt = r.belegung[i].gesamt > 0;
+    return `<rect x="${x}" y="${y(m.wert)}" width="${bw}" height="${hh}" rx="1.5"
+       fill="${belegt?"var(--accent)":"var(--rule)"}"><title>${m.name}: ${fmt(m.wert,0)} kWh</title></rect>
+      <text x="${x+bw/2}" y="${y(m.wert)-4}" text-anchor="middle" font-size="9.5" fill="var(--muted)" font-family="var(--mono)">${fmt(m.wert,0)}</text>`;
+  }).join("");
+  const achse = r.monat.map((m,i)=>
+    `<text x="${L+i*pw+pw/2}" y="${H-B+16}" text-anchor="middle" font-size="10.5" fill="var(--ink)">${m.name}</text>`).join("");
+  // Belegungsstreifen
+  const streifen = r.belegung.map((b,i)=>{
+    const x0 = L+i*pw+(pw-bw)/2;
+    if(!b.gesamt) return `<rect x="${x0}" y="${H-B+24}" width="${bw}" height="9" rx="1.5" fill="var(--rule-soft)"/>`;
+    let off = 0;
+    return Object.keys(b.teile).map(pid=>{
+      const pp = r.p.find(z=>z.id===pid); if(!pp) return "";
+      const bwid = bw*b.teile[pid]/b.gesamt, x = x0+off; off += bwid;
+      return `<rect x="${x}" y="${H-B+24}" width="${bwid}" height="9" rx="1.5" fill="${pp.farbe}"><title>${esc(pp.name)}: ${b.teile[pid]} Nächte im ${MONATE[i]}</title></rect>`;
+    }).join("");
+  }).join("");
+  return `<figure class="chart">
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monatlicher Stromverbrauch ${state.aktiv} in Kilowattstunden">
+      ${gitter}<line x1="${L}" y1="${T+ph}" x2="${W-R}" y2="${T+ph}" stroke="var(--ink)" stroke-width="1"/>
+      ${balken}${achse}${streifen}
+      <text x="${L}" y="${H-4}" font-size="9.5" fill="var(--muted)">Belegung (Nächte je Partei)</text>
+    </svg>
+    <figcaption>Stromverbrauch je Monat in kWh · Summe ${fmt(r.monatSumme,0)} kWh${r.stromJahr>0?" · Jahreszähler "+fmt(r.stromJahr,0)+" kWh":""}</figcaption>
+  </figure>`;
+}
+
+function bilanz(t, jahres, zug, leer, e, d){
+  return `<h3>${t}</h3>
+    <div class="kv"><span>Jahresverbrauch laut Zähler</span><b>${fmt(jahres,d)} ${e}</b></div>
+    <div class="kv"><span>davon durch Aufenthalte erfasst</span><b>${fmt(zug,d)} ${e}</b></div>
+    <div class="kv"><span>Leerstand (Grundlast, Frostschutz)</span><b>${fmt(leer,d)} ${e}</b></div>`;
+}
+function band(art, r, einheit, dez){
+  const basis = r[art+"Jahr"];
+  if(!(basis>0)) return `<div class="band"><div class="band-lbl"><span>${art==="strom"?"Strom":"Wasser"}</span><span>noch keine Werte</span></div>
+    <div class="band-bar"></div></div>`;
+  const segs = r.p.filter(p=>p[art]>0).map(p=>
+    `<div class="band-seg" data-p="1" title="${esc(p.name)}: ${fmt(p[art],dez)} ${einheit}" style="flex:${p[art]};background:${p.farbe}"></div>`).join("");
+  const leerFlex = r[art+"Leer"] > 0 ? `<div class="band-seg" title="Leerstand: ${fmt(r[art+"Leer"],dez)} ${einheit}" style="flex:${r[art+"Leer"]}"></div>` : "";
+  return `<div class="band">
+    <div class="band-lbl"><span>${art==="strom"?"Strom":"Wasser"}</span>
+      <span class="num">${fmt(basis,dez)} ${einheit}</span></div>
+    <div class="band-bar">${segs}${leerFlex}</div>
+  </div>`;
+}
+
+/* ---------- Kosten ---------- */
+function vKosten(el){
+  const J = jahr();
+  el.innerHTML = `
+  <div class="card">
+    <h2>Kosten ${state.aktiv}</h2>
+    <p class="sub">Beträge eintragen und je Posten festlegen, wie verteilt wird. Beim Schlüssel
+       „Einzelbetrag je Eigentümer“ trägst du statt einer Summe für jeden Eigentümer seinen eigenen Betrag ein –
+       so wie die Immobiliensteuer veranlagt wird.</p>
+    <div class="tblwrap"><table>
+      <thead><tr><th style="min-width:11rem">Posten</th><th class="r" style="min-width:8rem">Betrag (€)</th><th style="min-width:15rem">Verteilschlüssel</th><th></th></tr></thead>
+      <tbody id="kBody"></tbody>
+    </table></div>
+    <div class="row-btns">
+      <button class="btn ghost" id="kAdd">+ Posten hinzufügen</button>
+    </div>
+  </div>`;
+  const B = el.querySelector("#kBody");
+  function postenBetrag(k){
+    if(k.schluessel !== "einzeln") return num(k.betrag);
+    const e = k.einzel || {}, e2 = k.einzel2 || {};
+    return state.parteien.filter(p=>p.eigentuemer!==false)
+      .reduce((s,p)=>s+num(e[p.id])+num(e2[p.id]),0);
+  }
+  function ratennamenAktualisieren(k){
+    const tr = B.querySelector('[data-t="termin1"][data-k="'+k.id+'"]');
+    if(!tr) return;
+    const zelle = tr.closest("td");
+    zelle.querySelectorAll(".ratebox").forEach(box=>{
+      const l = box.querySelectorAll(".rate label.plain");
+      if(l[0]) l[0].textContent = k.termin1;
+      if(l[1]) l[1].textContent = k.termin2;
+    });
+  }
+  function summeAktualisieren(){
+    J.kosten.forEach(k=>{
+      const sp = B.querySelector('[data-sum="'+k.id+'"]');
+      if(sp) sp.textContent = eur(postenBetrag(k));
+      state.parteien.forEach(pp=>{
+        const el2 = B.querySelector('[data-psum="'+k.id+'|'+pp.id+'"]');
+        if(el2) el2.textContent = eur(num((k.einzel||{})[pp.id]) + num((k.einzel2||{})[pp.id]));
+      });
+    });
+    const td = B.querySelector("tr.total td.r");
+    if(td) td.textContent = eur(J.kosten.reduce((a,k)=>a+postenBetrag(k),0));
+  }
+  function zeichne(){
+    const eig = state.parteien.filter(p=>p.eigentuemer!==false);
+    B.innerHTML = J.kosten.map(k=>{
+      k.einzel = k.einzel || {}; k.bezahlt = k.bezahlt || {};
+      k.einzel2 = k.einzel2 || {}; k.bezahlt2 = k.bezahlt2 || {};
+      if(!k.termin1) k.termin1 = "Akonto (Juni)";
+      if(!k.termin2) k.termin2 = "Saldo (Dezember)";
+      const einzeln = k.schluessel === "einzeln";
+      let zeile = `<tr>
+        <td><input type="text" data-k="${k.id}" data-f="name" value="${esc(k.name)}"></td>
+        <td class="r">${einzeln
+          ? `<span class="num" data-sum="${k.id}" style="display:inline-block;padding:.55rem .2rem;color:var(--muted)">${eur(postenBetrag(k))}</span>`
+          : `<input type="text" class="n" inputmode="decimal" data-k="${k.id}" data-f="betrag" value="${esc(k.betrag)}" placeholder="0,00">`}</td>
+        <td><select data-k="${k.id}" data-f="schluessel">
+          ${Object.keys(SCHLUESSEL).map(x=>`<option value="${x}"${x===k.schluessel?" selected":""}>${SCHLUESSEL[x]}</option>`).join("")}
+        </select></td>
+        <td class="r"><button class="btn quiet" data-del="${k.id}" aria-label="Posten löschen">✕</button></td>
+      </tr>`;
+      if(einzeln){
+        zeile += `<tr><td colspan="4" style="background:var(--surface-2);padding:.8rem .5rem">
+          <div class="grid g2" style="margin-bottom:.8rem">
+            <div><label>Bezeichnung 1. Zahlung</label>
+              <input type="text" data-k="${k.id}" data-t="termin1" value="${esc(k.termin1)}"></div>
+            <div><label>Bezeichnung 2. Zahlung</label>
+              <input type="text" data-k="${k.id}" data-t="termin2" value="${esc(k.termin2)}"></div>
+          </div>
+          <label>Beträge je Eigentümer (€)</label>
+          ${eig.length
+            ? `<div class="grid g3">${eig.map(pp=>`<div class="ratebox">
+                <div class="ratename">${esc(pp.name)}
+                  <span class="num" data-psum="${k.id}|${pp.id}">${eur(num(k.einzel[pp.id])+num(k.einzel2[pp.id]))}</span></div>
+                <div class="rate">
+                  <label class="plain">${esc(k.termin1)}</label>
+                  <input type="text" class="n" inputmode="decimal" data-k="${k.id}" data-e="${pp.id}" value="${esc(k.einzel[pp.id]||"")}" placeholder="0,00">
+                  <label class="check small"><input type="checkbox" data-k="${k.id}" data-b="${pp.id}"${(k.bezahlt||{})[pp.id]?" checked":""}> bezahlt</label>
+                </div>
+                <div class="rate">
+                  <label class="plain">${esc(k.termin2)}</label>
+                  <input type="text" class="n" inputmode="decimal" data-k="${k.id}" data-e2="${pp.id}" value="${esc(k.einzel2[pp.id]||"")}" placeholder="0,00">
+                  <label class="check small"><input type="checkbox" data-k="${k.id}" data-b2="${pp.id}"${(k.bezahlt2||{})[pp.id]?" checked":""}> bezahlt</label>
+                </div>
+              </div>`).join("")}</div>`
+            : `<p class="empty" style="padding:.4rem 0">Keine Partei ist als Eigentümer markiert – trag das unter „Parteien“ ein.</p>`}
+        </td></tr>`;
+      }
+      return zeile;
+    }).join("") +
+      `<tr class="total"><td>Gesamtkosten</td><td class="r">${eur(J.kosten.reduce((a,k)=>a+postenBetrag(k),0))}</td><td colspan="2"></td></tr>`;
+  }
+  zeichne();
+  B.addEventListener("input", e=>{
+    const t = e.target; if(!t.dataset.k) return;
+    const k = J.kosten.find(x=>x.id===t.dataset.k); if(!k) return;
+    if(t.dataset.b2){ k.bezahlt2 = k.bezahlt2 || {}; k.bezahlt2[t.dataset.b2] = t.checked; }
+    else if(t.dataset.b){ k.bezahlt = k.bezahlt || {}; k.bezahlt[t.dataset.b] = t.checked; }
+    else if(t.dataset.e2){ k.einzel2 = k.einzel2 || {}; k.einzel2[t.dataset.e2] = t.value; }
+    else if(t.dataset.e){ k.einzel = k.einzel || {}; k.einzel[t.dataset.e] = t.value; }
+    else if(t.dataset.t){ k[t.dataset.t] = t.value; ratennamenAktualisieren(k); }
+    else if(t.dataset.f){ k[t.dataset.f] = t.value; }
+    else return;
+    speichern(); summeAktualisieren();
+  });
+  B.addEventListener("change", e=>{
+    const t = e.target; if(!t.dataset.k || t.dataset.f!=="schluessel") return;
+    const k = J.kosten.find(x=>x.id===t.dataset.k);
+    if(k){ k.schluessel = t.value; speichern(); zeichne(); }
+  });
+  B.addEventListener("click", e=>{
+    const id = e.target.dataset && e.target.dataset.del; if(!id) return;
+    const k = J.kosten.find(x=>x.id===id);
+    if(!confirm(`Posten „${k.name}“ löschen?`)) return;
+    J.kosten = J.kosten.filter(x=>x.id!==id); speichern(); zeichne();
+  });
+  el.querySelector("#kAdd").onclick = ()=>{
+    J.kosten.push({id:uid(), name:"Neuer Posten", betrag:"", schluessel:"gleich"});
+    speichern(); zeichne();
+  };
+}
+
+/* ---------- Abrechnung ---------- */
+function vAbrechnung(el){
+  const r = berechne();
+  const aktive = r.posten.filter(p=>p.betrag !== 0);
+  el.innerHTML = `
+  <div class="card no-print">
+    ${r.warn.map(w=>`<div class="msg w">${esc(w)}</div>`).join("")}
+    ${r.hinw.map(h=>`<div class="msg i">${esc(h)}</div>`).join("")}
+    ${(!r.warn.length && !r.hinw.length) ? `<div class="msg i">Alles vollständig – die Abrechnung ist fertig.</div>` : ""}
+  </div>
+
+  <div class="card">
+    <h2>Abrechnung ${state.aktiv}</h2>
+    <p class="sub">Bozner Haus · Oberbozen · Gesamtkosten ${eur(r.gesamt)}${r.gesamtBezahlt>0?" · davon direkt bezahlt "+eur(r.gesamtBezahlt):""} · verteilt ${eur(r.verteilt)}</p>
+    <div class="tblwrap"><table>
+      <thead><tr><th style="min-width:12rem">Posten</th><th style="min-width:9rem">Schlüssel</th><th class="r">Betrag</th>
+        ${r.p.map(p=>`<th class="r">${esc(p.name)}${p.eigentuemer?'<br><span class="owner">Eigentümer</span>':""}</th>`).join("")}</tr></thead>
+      <tbody>
+        ${aktive.map(k=>`<tr><td>${esc(k.name)}</td><td style="font-size:.8rem;color:var(--muted)">${esc(SCHLUESSEL[k.schluessel]||k.schluessel)}</td>
+          <td class="r">${eur(k.betrag)}</td>${k.anteile.map(a=>`<td class="r">${fmt(a,2)}</td>`).join("")}</tr>`).join("")}
+        <tr class="total"><td colspan="2">Kostenanteil</td><td class="r">${eur(r.gesamt)}</td>
+          ${r.p.map(p=>`<td class="r">${fmt(p.summe,2)}</td>`).join("")}</tr>
+        ${r.gesamtBezahlt > 0 ? `
+        <tr><td colspan="2" style="color:var(--muted)">davon direkt bezahlt</td>
+          <td class="r" style="color:var(--muted)">− ${eur(r.gesamtBezahlt)}</td>
+          ${r.p.map(p=>`<td class="r" style="color:var(--muted)">${p.bezahlt>0?"− "+fmt(p.bezahlt,2):"—"}</td>`).join("")}</tr>
+        <tr class="total"><td colspan="2">Noch zu überweisen</td><td class="r">${eur(r.gesamtOffen)}</td>
+          ${r.p.map(p=>`<td class="r">${fmt(p.offen,2)}</td>`).join("")}</tr>` : ""}
+      </tbody></table></div>
+    ${aktive.length ? "" : `<p class="empty">Noch keine Beträge eingetragen.</p>`}
+  </div>
+
+  ${r.monatErfasst ? `<div class="card">
+    <h2>Stromverbrauch ${state.aktiv} nach Monaten</h2>
+    <p class="sub">Blaue Balken: Monate mit Aufenthalt. Graue Balken: das Haus stand leer, verbraucht aber weiter.</p>
+    ${stromDiagramm(r)}
+    <div class="legend">
+      ${r.p.filter(p=>p.naechte>0).map(p=>`<span><i class="swatch" style="background:${p.farbe}"></i>${esc(p.name)}</span>`).join("")}
+    </div>
+  </div>` : ""}
+
+  <div class="card">
+    <h2>Verbrauchsgrundlagen</h2>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Partei</th><th class="r">Nächte</th><th class="r">Pers.-Nächte</th>
+        <th class="r">Strom kWh</th><th class="r">+ Leerstand</th><th class="r">Wasser m³</th><th class="r">+ Leerstand</th></tr></thead>
+      <tbody>${r.p.map(p=>`<tr><td>${esc(p.name)}</td><td class="r">${p.naechte}</td><td class="r">${p.pn}</td>
+        <td class="r">${fmt(p.strom,1)}</td><td class="r">${fmt(p.stromLeer||0,1)}</td>
+        <td class="r">${fmt(p.wasser,2)}</td><td class="r">${fmt(p.wasserLeer||0,2)}</td></tr>`).join("")}</tbody>
+    </table></div>
+    <div style="margin-top:.9rem">
+      <div class="kv"><span>Strompreis rechnerisch</span><b>${fmt(r.stromPreis,4)} €/kWh</b></div>
+      <div class="kv"><span>Wasserpreis rechnerisch</span><b>${fmt(r.wasserPreis,4)} €/m³</b></div>
+    </div>
+  </div>
+
+  ${r.posten.filter(k=>k.schluessel==="einzeln" && k.betrag!==0).map(k=>`
+  <div class="card">
+    <h2>${esc(k.name)} – Zahlungen je Eigentümer</h2>
+    <p class="sub">Direkt von den Eigentümern gezahlt, daher in der Überweisung abgezogen.</p>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Eigentümer</th>${k.raten.map(rt=>`<th class="r">${esc(rt.name)}</th>`).join("")}<th class="r">Summe</th><th class="r">offen</th></tr></thead>
+      <tbody>
+        ${r.p.map((p,i)=> k.anteile[i]===0 ? "" : `<tr><td>${esc(p.name)}</td>
+          ${k.raten.map(rt=>`<td class="r">${fmt(rt.betraege[i],2)}${rt.bezahlt[i]?' <span style="color:var(--ok)">✓</span>':' <span style="color:var(--muted)">offen</span>'}</td>`).join("")}
+          <td class="r">${fmt(k.anteile[i],2)}</td>
+          <td class="r">${fmt(k.anteile[i] - k.raten.reduce((a,rt)=>a+(rt.bezahlt[i]?rt.betraege[i]:0),0),2)}</td></tr>`).join("")}
+        <tr class="total"><td>Gesamt</td>
+          ${k.raten.map(rt=>`<td class="r">${fmt(rt.betraege.reduce((a,b)=>a+b,0),2)}</td>`).join("")}
+          <td class="r">${fmt(k.betrag,2)}</td><td class="r">${fmt(k.betrag - k.bezahlt,2)}</td></tr>
+      </tbody></table></div>
+  </div>`).join("")}
+
+  <div class="card">
+    <h2>Je Partei</h2>
+    ${r.p.map(p=>`
+      <details>
+        <summary>${esc(p.name)} — <span class="num">${eur(p.offen)}</span>${p.bezahlt>0?` <span style="font-weight:400;color:var(--muted);font-size:.85rem">von ${eur(p.summe)}</span>`:""}</summary>
+        <div style="margin-top:.6rem">
+          ${p.stays.length ? p.stays.map(s=>`<div class="kv"><span>${dDE(s.anreise)}–${dDE(s.abreise)}, ${s.personen} Pers.</span>
+             <b>${s.naechte} N · ${fmt(s.strom,1)} kWh · ${fmt(s.wasser,2)} m³</b></div>`).join("")
+            : `<div class="kv"><span>keine Aufenthalte</span><b>—</b></div>`}
+          <div style="height:.6rem"></div>
+          ${aktive.map(k=>{
+            const raten = (p.ratenPost||{})[k.id];
+            let h = `<div class="kv"><span>${esc(k.name)}</span><b>${eur(p.posten[k.id]||0)}</b></div>`;
+            if(raten) h += raten.filter(x=>x.betrag!==0).map(x=>
+              `<div class="kv" style="color:var(--muted);font-size:.84rem;padding-left:1rem">
+                 <span>${esc(x.name)} · ${x.bezahlt?"bezahlt":"offen"}</span><b>${eur(x.betrag)}</b></div>`).join("");
+            return h;
+          }).join("")}
+          <div class="kv" style="border-top:2px solid var(--ink);margin-top:.3rem;padding-top:.4rem">
+            <span><b>Kostenanteil</b></span><b>${eur(p.summe)}</b></div>
+          ${p.bezahlt>0 ? `<div class="kv" style="color:var(--muted)"><span>davon direkt bezahlt</span><b>− ${eur(p.bezahlt)}</b></div>
+          <div class="kv"><span><b>Zu überweisen</b></span><b>${eur(p.offen)}</b></div>` : ""}
+        </div>
+      </details>`).join("")}
+  </div>
+
+  ${(state.bank && (state.bank.iban || state.bank.inhaber)) ? `<div class="card">
+    <h2>Bankverbindung</h2>
+    <p class="sub">Verwendungszweck: Bozner Haus ${state.aktiv} und Name der Partei.</p>
+    <div class="kv"><span>Empfänger</span><b>${esc(state.bank.inhaber||"—")}</b></div>
+    <div class="kv"><span>Bank</span><b>${esc(state.bank.institut||"—")}</b></div>
+    <div class="kv"><span>IBAN</span><b>${esc(state.bank.iban||"—")}</b></div>
+    <div class="kv"><span>BIC</span><b>${esc(state.bank.bic||"—")}</b></div>
+  </div>` : ""}
+
+  <div class="row-btns no-print">
+    <button class="btn" id="abDruck">Abrechnung drucken / als PDF</button>
+    <button class="btn ghost" id="abCsv">Als CSV speichern</button>
+  </div>`;
+
+  el.querySelector("#abDruck").onclick = ()=>window.print();
+  el.querySelector("#abCsv").onclick = ()=>{
+    const sep = ";";
+    const zeilen = [["Posten","Schluessel","Betrag"].concat(r.p.map(p=>p.name)).join(sep)];
+    aktive.forEach(k=>zeilen.push([k.name, SCHLUESSEL[k.schluessel]||k.schluessel, fmt(k.betrag,2)].concat(k.anteile.map(a=>fmt(a,2))).join(sep)));
+    zeilen.push(["Kostenanteil","",fmt(r.gesamt,2)].concat(r.p.map(p=>fmt(p.summe,2))).join(sep));
+    if(r.gesamtBezahlt > 0){
+      zeilen.push(["davon direkt bezahlt","",fmt(-r.gesamtBezahlt,2)].concat(r.p.map(p=>fmt(-p.bezahlt,2))).join(sep));
+      zeilen.push(["Noch zu überweisen","",fmt(r.gesamtOffen,2)].concat(r.p.map(p=>fmt(p.offen,2))).join(sep));
+    }
+    r.posten.filter(k=>k.schluessel==="einzeln" && k.betrag!==0).forEach(k=>{
+      zeilen.push("");
+      zeilen.push([k.name].concat(k.raten.map(rt=>rt.name)).concat(["Summe","offen"]).join(sep));
+      r.p.forEach((p,i)=>{ if(k.anteile[i]===0) return;
+        const off = k.anteile[i] - k.raten.reduce((a,rt)=>a+(rt.bezahlt[i]?rt.betraege[i]:0),0);
+        zeilen.push([p.name].concat(k.raten.map(rt=>fmt(rt.betraege[i],2)+(rt.bezahlt[i]?" (bezahlt)":"")))
+          .concat([fmt(k.anteile[i],2), fmt(off,2)]).join(sep));
+      });
+    });
+    if(r.monatErfasst){
+      zeilen.push("");
+      zeilen.push(["Monat","Strom kWh","belegte Nächte"].join(sep));
+      r.monat.forEach((m,i)=>zeilen.push([m.name, m.wert==null?"":fmt(m.wert,0), r.belegung[i].gesamt].join(sep)));
+    }
+    download("Abrechnung-"+state.aktiv+".csv", "\ufeff"+zeilen.join("\r\n"), "text/csv");
+  };
+}
+
+/* ---------- E-Mails ---------- */
+function mailText(p, r){
+  const J = jahr();
+  const bank = state.bank || {};
+  const aktive = r.posten.filter(k=>k.betrag !== 0);
+  const L = [];
+  L.push("Hallo "+(p.name||"")+",");
+  L.push("");
+  L.push(J.mail.einleitung);
+  L.push("");
+  if(p.stays.length){
+    L.push("Deine Aufenthalte:");
+    p.stays.forEach(s=>{
+      L.push("  " + dDE(s.anreise)+" – "+dDE(s.abreise)
+        + ", " + s.personen + " Pers., " + s.naechte + " Nächte"
+        + ", " + fmt(s.strom,1) + " kWh, " + fmt(s.wasser,2) + " m³");
+    });
+    L.push("  Summe: "+p.naechte+" Nächte, "+p.pn+" Personennächte, "
+      + fmt(p.strom,1)+" kWh, "+fmt(p.wasser,2)+" m³");
+    if((p.stromLeer||0)>0.05 || (p.wasserLeer||0)>0.005)
+      L.push("  Anteil Leerstand (Grundlast): "+fmt(p.stromLeer||0,1)+" kWh, "+fmt(p.wasserLeer||0,2)+" m³");
+  }else{
+    L.push("Du warst dieses Jahr nicht im Haus.");
+  }
+  L.push("");
+  L.push("Deine Kostenanteile:");
+  const meine = aktive.filter(k => Math.abs(p.posten[k.id]||0) > 0.004);
+  const zeigen = meine.length ? meine : aktive;
+  const b = Math.max.apply(null, zeigen.map(k=>k.name.length).concat([10]));
+  zeigen.forEach(k=>{
+    const raten = (p.ratenPost||{})[k.id];
+    const voll = raten ? raten.every(x=>x.betrag===0 || x.bezahlt) : !!(p.bezahltPost||{})[k.id];
+    L.push("  " + k.name.padEnd(b+2,".") + " " + fmt(p.posten[k.id]||0,2).padStart(9) + " €"
+           + (voll && (p.bezahltPost||{})[k.id] ? "   (bereits bezahlt)" : ""));
+    if(raten && !voll){
+      raten.filter(x=>x.betrag !== 0).forEach(x=>{
+        L.push("     " + ("· "+x.name).padEnd(b,".") + " " + fmt(x.betrag,2).padStart(9) + " €"
+               + (x.bezahlt ? "   bereits bezahlt" : "   noch offen"));
+      });
+    }
+  });
+  L.push("  " + "".padEnd(b+2,"-") + " ----------");
+  L.push("  " + "Kostenanteil".padEnd(b+2," ") + " " + fmt(p.summe,2).padStart(9) + " €");
+  if(p.bezahlt > 0){
+    L.push("  " + "davon direkt bezahlt".padEnd(b+2," ") + " " + ("-"+fmt(p.bezahlt,2)).padStart(9) + " €");
+    L.push("  " + "".padEnd(b+2,"-") + " ----------");
+    L.push("  " + "Zu überweisen".padEnd(b+2," ") + " " + fmt(p.offen,2).padStart(9) + " €");
+  }
+  L.push("");
+  const zuZahlen = p.bezahlt > 0 ? p.offen : p.summe;
+  if(zuZahlen > 0.004 && (bank.iban || bank.inhaber)){
+    L.push("Bankverbindung:");
+    if(bank.inhaber)  L.push("  " + bank.inhaber);
+    if(bank.institut) L.push("  " + bank.institut);
+    if(bank.iban)     L.push("  IBAN  " + bank.iban);
+    if(bank.bic)      L.push("  BIC   " + bank.bic);
+    L.push("  Verwendungszweck: Bozner Haus " + state.aktiv + " – " + (p.name||""));
+    L.push("");
+  }
+  if(r.monatErfasst){
+    const max = Math.max.apply(null, r.monat.map(m=>m.wert||0).concat([1]));
+    L.push("Stromverbrauch des Hauses im Jahresverlauf (kWh):");
+    r.monat.forEach((m,i)=>{
+      if(m.wert == null){ L.push("  "+m.name+"  "+"".padStart(6)+"   (kein Wert)"); return; }
+      const bar = "#".repeat(Math.max(m.wert>0?1:0, Math.round(m.wert/max*24)));
+      const beleg = r.belegung[i].gesamt > 0 ? "  belegt" : "";
+      L.push("  "+m.name+"  "+fmt(m.wert,0).padStart(6)+"  "+bar+beleg);
+    });
+    L.push("  Summe "+fmt(r.monatSumme,0)+" kWh. Die Monate ohne Vermerk „belegt“ zeigen die Grundlast des leeren Hauses.");
+    L.push("");
+  }
+  const eigAnz = r.p.filter(x=>x.eigentuemer).length;
+  let hg = "Zum Hintergrund: Die Gesamtkosten von "+eur(r.gesamt)+" wurden auf "+r.p.length+" Parteien verteilt. "
+    + "Strom und Wasser nach Zählerständen ("+fmt(r.stromPreis,4)+" €/kWh, "+fmt(r.wasserPreis,4)+" €/m³), "
+    + "die übrigen verbrauchsabhängigen Kosten nach Personennächten.";
+  if(eigAnz) hg += " Garten und Gebäudeversicherung tragen die "+eigAnz+" Eigentümer zu gleichen Teilen, "
+    + "die Immobiliensteuer trägt jeder Eigentümer in der für ihn veranlagten Höhe.";
+  if(r.stromLeer > 0) hg += " Der Leerstandsverbrauch von "+fmt(r.stromLeer,0)+" kWh (Frostschutz und Standby) "
+    + "wurde zu gleichen Teilen auf die Parteien umgelegt, die das Haus "+state.aktiv+" genutzt haben.";
+  L.push(hg);
+  L.push("");
+  L.push(J.mail.schluss);
+  return L.join("\n");
+}
+
+function vMail(el){
+  const J = jahr();
+  const r = berechne();
+  el.innerHTML = `
+  <div class="card">
+    <h2>E-Mails an die Parteien</h2>
+    <p class="sub">Betreff und Textbausteine gelten für alle sechs Mails. „E-Mail öffnen“ startet dein Mailprogramm
+       mit fertig ausgefülltem Empfänger und Text – abschicken musst du selbst.</p>
+    <div><label>Betreff</label><input type="text" id="mB" value="${esc(J.mail.betreff)}"></div>
+    <div style="margin-top:.7rem"><label>Einleitung</label><textarea id="mE">${esc(J.mail.einleitung)}</textarea></div>
+    <div style="margin-top:.7rem"><label>Schlusstext (Zahlungsfrist, Gruß)</label><textarea id="mS">${esc(J.mail.schluss)}</textarea></div>
+  </div>
+  <div class="card">
+    <h2>Bankverbindung</h2>
+    <p class="sub">Steht in jeder Mail mit offenem Betrag und auf der gedruckten Abrechnung.
+       Gilt für alle Jahre – Verwendungszweck und Name der Partei setzt die App selbst ein.</p>
+    <div class="grid g2">
+      <div><label>Empfänger</label><input type="text" id="bI" value="${esc((state.bank||{}).inhaber||"")}"></div>
+      <div><label>Bank</label><input type="text" id="bK" value="${esc((state.bank||{}).institut||"")}"></div>
+      <div><label>IBAN</label><input type="text" id="bA" value="${esc((state.bank||{}).iban||"")}" spellcheck="false"></div>
+      <div><label>BIC</label><input type="text" id="bB" value="${esc((state.bank||{}).bic||"")}" spellcheck="false"></div>
+    </div>
+  </div>
+  ${r.warn.length ? `<div class="card">${r.warn.map(w=>`<div class="msg w">${esc(w)}</div>`).join("")}</div>` : ""}
+  <div class="card">
+    <h2>Versand</h2>
+    <div id="mListe"></div>
+  </div>`;
+
+  const bind = (id,f)=>{ el.querySelector(id).addEventListener("input", e=>{ J.mail[f]=e.target.value; speichern(); zeichne(); }); };
+  bind("#mB","betreff"); bind("#mE","einleitung"); bind("#mS","schluss");
+  const bindBank = (id,f)=>{ el.querySelector(id).addEventListener("input", e=>{
+    state.bank = state.bank || {}; state.bank[f] = e.target.value; speichern(); zeichne(); }); };
+  bindBank("#bI","inhaber"); bindBank("#bK","institut"); bindBank("#bA","iban"); bindBank("#bB","bic");
+
+  const L = el.querySelector("#mListe");
+  zeichne();
+  function zeichne(){
+    L.innerHTML = r.p.map((p,i)=>`
+      <div class="stay" style="border-left-color:${p.farbe}">
+        <div class="stay-head">
+          <div class="who"><strong>${esc(p.name)}</strong><br>
+            <span style="font-size:.82rem;color:var(--muted)">${p.email?esc(p.email):"keine E-Mail-Adresse hinterlegt"}</span></div>
+          <span class="pill calc">${p.bezahlt>0 ? eur(p.offen)+" (von "+eur(p.summe)+")" : eur(p.summe)}</span>
+        </div>
+        <details><summary>Text ansehen</summary>
+          <pre style="white-space:pre-wrap;font-family:var(--mono);font-size:.78rem;margin:.6rem 0 0">${esc(mailText(p,r))}</pre>
+        </details>
+        <div class="row-btns">
+          <button class="btn" data-mail="${p.id}"${p.email?"":" disabled"}>E-Mail öffnen</button>
+          <button class="btn ghost" data-copy="${p.id}">Text kopieren</button>
+        </div>
+      </div>`).join("");
+  }
+  L.addEventListener("click", e=>{
+    const t = e.target;
+    const idm = t.dataset && t.dataset.mail, idc = t.dataset && t.dataset.copy;
+    const p = r.p.find(x=>x.id===(idm||idc)); if(!p) return;
+    const txt = mailText(p,r);
+    if(idm){
+      location.href = "mailto:"+encodeURIComponent(p.email)
+        + "?subject="+encodeURIComponent(J.mail.betreff)
+        + "&body="+encodeURIComponent(txt);
+    }else{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(()=>toast("Text kopiert."), ()=>toast("Kopieren nicht möglich."));
+      }else toast("Kopieren wird von diesem Browser nicht unterstützt.");
+    }
+  });
+}
+
+/* ---------- Daten ---------- */
+function download(name, inhalt, typ){
+  const b = new Blob([inhalt], {type:typ+";charset=utf-8"});
+  const u = URL.createObjectURL(b);
+  const a = document.createElement("a");
+  a.href = u; a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ a.remove(); URL.revokeObjectURL(u); }, 500);
+}
+
+function vDaten(el){
+  const js = Object.keys(state.jahre).sort();
+  el.innerHTML = `
+  <div class="card">
+    <h2>Sichern und übertragen</h2>
+    <p class="sub">Alles liegt nur in diesem Browser. Sichere nach jeder Abrechnung eine Datei –
+       damit bekommst du die Daten auch auf ein anderes Gerät.</p>
+    <div class="row-btns">
+      <button class="btn" id="dExp">Daten sichern (JSON)</button>
+      <button class="btn ghost" id="dImp">Datei einlesen</button>
+      <input type="file" id="dFile" accept=".json,application/json" hidden>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Jahre</h2>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Jahr</th><th class="r">Aufenthalte</th><th class="r">Kosten</th><th></th></tr></thead>
+      <tbody>${js.map(j=>{
+        const J = state.jahre[j];
+        const s = J.kosten.reduce((a,k)=>a+num(k.betrag),0);
+        return `<tr><td>${j}${j===state.aktiv?' <span class="pill">aktiv</span>':""}</td>
+          <td class="r">${J.aufenthalte.length}</td><td class="r">${eur(s)}</td>
+          <td class="r"><button class="btn quiet" data-djahr="${j}">Löschen</button></td></tr>`;
+      }).join("")}</tbody></table></div>
+  </div>
+  <div class="card">
+    <h2>Alles zurücksetzen</h2>
+    <p class="sub">Löscht Parteien, Jahre und Kosten unwiderruflich aus diesem Browser.</p>
+    <div class="row-btns"><button class="btn danger" id="dReset">Alle Daten löschen</button></div>
+  </div>`;
+
+  el.querySelector("#dExp").onclick = ()=>{
+    download("Bozner-Haus-Daten-"+new Date().toISOString().slice(0,10)+".json",
+      JSON.stringify(state,null,2), "application/json");
+  };
+  el.querySelector("#dImp").onclick = ()=> el.querySelector("#dFile").click();
+  el.querySelector("#dFile").onchange = e=>{
+    const f = e.target.files[0]; if(!f) return;
+    const rd = new FileReader();
+    rd.onload = ()=>{
+      try{
+        const d = JSON.parse(rd.result);
+        if(!d.parteien || !d.jahre) throw 0;
+        if(!confirm("Die eingelesene Datei ersetzt alle jetzigen Daten. Fortfahren?")) return;
+        state = d; if(!state.jahre[state.aktiv]) state.aktiv = Object.keys(state.jahre).sort()[0];
+        speichern(); render(); toast("Daten eingelesen.");
+      }catch(err){ toast("Die Datei ist keine gültige Sicherung."); }
+    };
+    rd.readAsText(f);
+    e.target.value = "";
+  };
+  el.onclick = e=>{
+    const j = e.target.dataset && e.target.dataset.djahr; if(!j) return;
+    if(Object.keys(state.jahre).length<2){ toast("Das letzte Jahr lässt sich nicht löschen."); return; }
+    if(!confirm("Jahr "+j+" mit allen Aufenthalten und Kosten löschen?")) return;
+    delete state.jahre[j];
+    if(state.aktiv===j) state.aktiv = Object.keys(state.jahre).sort()[0];
+    speichern(); render();
+  };
+  el.querySelector("#dReset").onclick = ()=>{
+    if(!confirm("Wirklich alle Daten löschen? Das lässt sich nicht rückgängig machen.")) return;
+    if(!confirm("Letzte Nachfrage: alles löschen?")) return;
+    localStorage.removeItem(KEY); state = leer(); view="parteien"; render(); toast("Alles zurückgesetzt.");
+  };
+}
+
+/* ============================================================
+   Start
+   ============================================================ */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick = ()=>{ view = t.dataset.v; render(); window.scrollTo({top:0}); };
+});
+document.getElementById("jahrSel").onchange = e=>{ state.aktiv = e.target.value; speichern(); render(); };
+document.getElementById("btnNeuesJahr").onclick = ()=>{
+  const vorhanden = Object.keys(state.jahre).sort();
+  const vorschlag = String(Number(vorhanden[vorhanden.length-1] || new Date().getFullYear())+1);
+  const j = prompt("Welches Abrechnungsjahr anlegen?", vorschlag);
+  if(!j) return;
+  const jj = String(j).trim();
+  if(!/^\d{4}$/.test(jj)){ toast("Bitte eine vierstellige Jahreszahl eingeben."); return; }
+  if(state.jahre[jj]){ state.aktiv = jj; speichern(); render(); toast("Jahr "+jj+" gibt es schon – es ist jetzt aktiv."); return; }
+  const vor = state.jahre[String(Number(jj)-1)];
+  state.jahre[jj] = neuesJahr(jj, vor ? {zaehler:{
+      stromAnfang: vor.zaehler.stromEnde || "", stromEnde:"",
+      wasserAnfang: vor.zaehler.wasserEnde || "", wasserEnde:""}} : null);
+  state.aktiv = jj; speichern(); render();
+  toast(vor ? "Jahr "+jj+" angelegt, Anfangsstände übernommen." : "Jahr "+jj+" angelegt.");
+};
+
+state = laden();
+render();
+</script>
+</body>
+</html>
